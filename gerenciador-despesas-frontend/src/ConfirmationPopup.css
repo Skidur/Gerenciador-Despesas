@@ -1,0 +1,152 @@
+/* Estilo do overlay do pop-up */
+/* Cria uma camada de fundo escura que cobre toda a tela para destacar o pop-up */
+.popup-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-color: rgba(0, 0, 0, 0.6) !important; /* Fundo escuro com transparência */
+  display: flex !important;
+  justify-content: center !important; /* Centraliza o pop-up horizontalmente */
+  align-items: center !important; /* Centraliza o pop-up verticalmente */
+  z-index: 1000 !important; /* Garante que o pop-up fique acima de outros elementos */
+  animation: fadeIn 0.3s ease-in-out !important; /* Animação de entrada (fade-in) */
+  overflow: auto !important; /* Permite rolagem se o conteúdo for maior que a tela */
+}
+
+/* Estilo do overlay ao fechar */
+/* Aplica uma animação de saída (fade-out) quando o pop-up é fechado */
+.popup-overlay.closing {
+  animation: fadeOut 0.3s ease-in-out forwards !important;
+}
+
+/* Estilo do pop-up em si */
+/* Define a aparência do container do pop-up, como fundo, bordas e animação */
+.popup {
+  background-color: #2a2a2a !important; /* Fundo cinza escuro */
+  border-radius: 12px !important; /* Bordas arredondadas */
+  padding: 30px !important; /* Espaçamento interno */
+  width: 90% !important; /* Largura responsiva */
+  max-width: 500px !important; /* Largura máxima */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important; /* Sombra para profundidade */
+  border: 1px solid #444 !important; /* Borda cinza escura */
+  position: relative !important;
+  animation: slideIn 0.3s ease-in-out !important; /* Animação de entrada (slide-in) */
+}
+
+/* Estilo do pop-up ao fechar */
+/* Aplica uma animação de saída (slide-out) quando o pop-up é fechado */
+.popup.closing {
+  animation: slideOut 0.3s ease-in-out forwards !important;
+}
+
+/* Animações de entrada e saída do overlay */
+/* Define a transição de opacidade para o overlay */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Animações de entrada e saída do pop-up */
+/* Define a transição de opacidade e deslocamento vertical para o pop-up */
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+}
+
+/* Estilo do texto dentro do pop-up */
+/* Formata a mensagem exibida no pop-up, como cor, tamanho e alinhamento */
+.popup p {
+  color: #fff !important; /* Texto branco */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important; /* Sombra no texto para contraste */
+  font-size: 1.2em !important; /* Tamanho da fonte */
+  font-weight: 500 !important; /* Peso da fonte */
+  margin-bottom: 25px !important; /* Espaçamento inferior */
+  text-align: center !important; /* Alinhamento centralizado */
+}
+
+/* Estilo do container dos botões do pop-up */
+/* Organiza os botões (Confirmar e Cancelar) em um layout flexível */
+.popup-buttons {
+  display: flex !important;
+  justify-content: space-between !important; /* Distribui os botões igualmente */
+  gap: 10px !important; /* Espaçamento entre os botões */
+}
+
+/* Estilo base dos botões do pop-up */
+/* Define a aparência padrão dos botões, como padding, bordas e efeitos */
+.popup-buttons button {
+  flex: 1 !important; /* Faz os botões ocuparem o mesmo espaço */
+  padding: 10px 20px !important; /* Espaçamento interno */
+  border: none !important;
+  border-radius: 8px !important; /* Bordas arredondadas */
+  font-weight: 500 !important; /* Peso da fonte */
+  cursor: pointer !important;
+  transition: all 0.3s ease !important; /* Transição suave para hover */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important; /* Sombra para profundidade */
+  color: white !important; /* Texto branco */
+}
+
+/* Estilo dos botões ao receber foco */
+/* Adiciona um contorno ao redor do botão quando focado */
+.popup-buttons button:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3) !important; /* Contorno branco translúcido */
+}
+
+/* Estilo do botão "Confirmar" (primeiro botão) */
+/* Define a cor de fundo e o comportamento ao passar o mouse */
+.popup-buttons button:first-child {
+  background-color: #dc3545 !important; /* Vermelho para o botão "Confirmar" */
+}
+
+.popup-buttons button:first-child:hover {
+  background-color: #c82333 !important; /* Vermelho mais escuro no hover */
+  transform: translateY(-2px) !important; /* Efeito de elevação */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important; /* Sombra mais intensa */
+}
+
+/* Estilo do botão "Cancelar" (segundo botão) */
+/* Define a cor de fundo e o comportamento ao passar o mouse */
+.popup-buttons button:last-child {
+  background-color: #6c757d !important; /* Cinza para o botão "Cancelar" */
+}
+
+.popup-buttons button:last-child:hover {
+  background-color: #5a6268 !important; /* Cinza mais escuro no hover */
+  transform: translateY(-2px) !important; /* Efeito de elevação */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important; /* Sombra mais intensa */
+}

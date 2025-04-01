@@ -1,0 +1,1073 @@
+/* Reset básico para consistência */
+/* Remove margens e paddings padrão e define box-sizing para todos os elementos */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Estilo do container principal da aplicação (.App) */
+/* Define o fundo gradiente, fonte e layout geral da aplicação */
+.App {
+  font-family: 'Montserrat', sans-serif;
+  padding: 20px;
+  background: linear-gradient(to right, #87CEEB, #4682B4); /* Gradiente azul */
+  min-height: 100vh; /* Garante que o fundo cubra toda a altura da tela */
+  position: relative; /* Necessário para o pseudo-elemento de fundo */
+  overflow-x: hidden; /* Evita rolagem horizontal indesejada */
+}
+
+/* Camada de fundo com efeito de vidro fumê */
+/* Adiciona um overlay escuro com blur sobre o fundo gradiente */
+.App::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo fumê */
+  backdrop-filter: blur(10px); /* Efeito de blur */
+  -webkit-backdrop-filter: blur(10px); /* Suporte para WebKit */
+  z-index: 1; /* Coloca a camada de blur atrás do conteúdo */
+}
+
+/* Garante que o conteúdo da aplicação fique acima da camada de blur */
+.App > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Estilo para seções com efeito de vidro (.glass-section) */
+/* Define o estilo de seções como cabeçalho e outras áreas com fundo translúcido */
+.glass-section {
+  background-color: rgba(255, 255, 255, 0.1); /* Fundo leve para contraste */
+  border-radius: 12px; /* Bordas arredondadas */
+  padding: 20px; /* Espaçamento interno */
+  margin: 10px 0; /* Espaçamento externo */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra leve */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Borda sutil */
+}
+
+/* Estilo de texto dentro de seções .glass-section */
+/* Garante legibilidade com texto branco e sombra */
+.glass-section h1,
+.glass-section h2,
+.glass-section h3,
+.glass-section p,
+.glass-section label,
+.glass-section select,
+.glass-section button {
+  color: #fff; /* Texto branco para contraste */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5); /* Sombra para melhorar legibilidade */
+}
+
+/* Estilo específico para o cabeçalho (header.glass-section) */
+/* Define o layout e o efeito de vidro para o cabeçalho */
+header.glass-section {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza os filhos (como o .form-container) */
+}
+
+/* Estilo do título no cabeçalho */
+.glass-section h1 {
+  font-size: 2.2em;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Sombra ajustada */
+}
+
+/* Estilo dos botões dentro de seções .glass-section */
+/* Define a aparência padrão dos botões com fundo translúcido */
+.glass-section button {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.glass-section button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Estilo de inputs e selects dentro de seções .glass-section */
+/* Define a aparência com fundo translúcido e comportamento ao focar */
+.glass-section input,
+.glass-section select {
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.glass-section input:focus,
+.glass-section select:focus {
+  background-color: rgba(255, 255, 255, 0.25);
+  outline: none;
+}
+
+/* Estilo do placeholder em inputs dentro de .glass-section */
+/* Remove sombra e herda a cor para evitar conflitos visuais */
+.glass-section input::placeholder {
+  color: inherit;
+  text-shadow: none;
+}
+
+/* Estilo do formulário no cabeçalho (.form-container) */
+/* Organiza o formulário de adicionar transações com layout centralizado */
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.form-container form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+/* Estilo de inputs, selects e botões no .form-container */
+/* Define tamanhos consistentes e aparência com fundo branco e texto preto */
+.form-container select,
+.form-container input,
+.form-container form button,
+.form-container button.delete-all {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  min-width: 150px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.form-container select,
+.form-container input {
+  background: #fff;
+  color: #000;
+}
+
+/* Estilo do placeholder nos inputs do .form-container */
+.form-container input::-webkit-input-placeholder,
+.form-container input::-moz-placeholder,
+.form-container input:-ms-input-placeholder,
+.form-container input::placeholder {
+  color: #444 !important;
+  font-weight: 400;
+  font-style: italic;
+  opacity: 1;
+}
+
+.form-container input,
+.form-container input[type="text"],
+.form-container input[type="number"] {
+  color: #333;
+}
+
+.form-container select:focus,
+.form-container input:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+/* Estilo dos botões no formulário do .form-container */
+.form-container form button {
+  background-color: #28a745; /* Verde para "Adicionar" */
+  color: white;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.form-container form button:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.form-container form button[type="button"] {
+  background-color: #6c757d; /* Cinza para "Cancelar" */
+}
+
+.form-container form button[type="button"]:hover {
+  background-color: #5a6268;
+}
+
+/* Estilo do botão "Apagar Tudo" no .form-container */
+.form-container button.delete-all {
+  background-color: #dc3545; /* Vermelho */
+  border: none;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.form-container button.delete-all:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilo dos controles de gráficos (.controls) */
+/* Organiza os controles de seleção de gráficos com layout centralizado */
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+}
+
+/* Estilo de cada controle de gráfico (.chart-control) */
+.chart-control {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.chart-control label {
+  font-weight: 500;
+  color: #fff;
+}
+
+/* Estilo do select nos controles de gráficos */
+.chart-control select {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+  font-weight: 400;
+  transition: all 0.3s ease;
+  color: #333;
+}
+
+.chart-control select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+.controls label {
+  font-weight: 500;
+  color: #fff;
+}
+
+/* Estilo do container principal (.main-container) */
+/* Organiza a sidebar e o conteúdo principal em um layout flexível */
+.main-container {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+/* Estilo da sidebar (.sidebar) */
+/* Define a aparência da barra lateral com resumo financeiro */
+.sidebar {
+  width: 250px;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.sidebar h2 {
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  font-size: 1.5em;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Estilo dos parágrafos na sidebar */
+.sidebar p {
+  margin: 12px 0;
+  font-size: 1em;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  transition: all 0.3s ease;
+}
+
+.sidebar p:hover {
+  transform: translateX(5px);
+}
+
+/* Estilo dos ícones na sidebar */
+/* Adiciona ícones antes de cada parágrafo com base na classe */
+.income::before,
+.expense::before,
+.covered::before,
+.pending::before,
+.needed::before,
+.positive::before,
+.negative::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-size: cover;
+  margin-right: 8px;
+}
+
+.income::before {
+  background-image: url('https://img.icons8.com/ios-filled/16/36A2EB/money-bag.png');
+}
+.expense::before {
+  background-image: url('https://img.icons8.com/ios-filled/16/FF0000/bill.png');
+}
+.covered::before {
+  background-image: url('https://img.icons8.com/ios-filled/16/7B1FA2/check--v1.png');
+}
+.pending::before {
+  background-image: url('https://img.icons8.com/ios-filled/16/FF9800/hourglass.png');
+}
+.needed::before {
+  background-image: url('https://img.icons8.com/ios-filled/16/F44336/warning.png');
+}
+.positive::before {
+  background-image: url('https://img.icons8.com/ios-filled/16/4CAF50/positive-dynamic.png');
+}
+.negative::before {
+  background-image: url('https://img.icons8.com/ios-filled/16/F44336/negative-dynamic.png');
+}
+
+/* Estilo das cores dos parágrafos na sidebar */
+.sidebar p.income {
+  color: #36A2EB !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+.sidebar p.expense {
+  color: #FF0000 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+.sidebar p.covered {
+  color: #7B1FA2 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+.sidebar p.pending {
+  color: #FF9800 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+.sidebar p.needed {
+  color: #F44336 !important;
+  font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+.sidebar p.positive {
+  color: #4CAF50 !important;
+  font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+.sidebar p.negative {
+  color: #F44336 !important;
+  font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Estilo do conteúdo principal (.content) */
+/* Define o espaço para o conteúdo principal ao lado da sidebar */
+.content {
+  flex: 1;
+  width: 100%;
+}
+
+/* Estilo do container de gráficos (.charts-container) */
+/* Organiza os gráficos em um layout flexível */
+.charts-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  width: 100%;
+  background-color: transparent;
+}
+
+/* Estilo de cada gráfico (.chart) */
+/* Define o tamanho e layout de cada gráfico */
+.chart {
+  flex: 1 1 calc(33.33% - 20px);
+  min-width: 300px;
+  max-width: none;
+  height: 400px;
+  padding: 15px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Estilo do canvas dentro de cada gráfico */
+.chart canvas {
+  width: 100% !important;
+  height: 300px !important;
+  max-width: 400px;
+  max-height: 300px;
+}
+
+/* Estilo do título dos gráficos */
+.chart h2 {
+  font-size: 1.2em;
+  font-weight: 500;
+  margin-bottom: 10px;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+/* Estilo do container de transações (.transactions-container) */
+/* Define o layout da seção de histórico de transações */
+.transactions-container {
+  padding: 20px;
+  border-radius: 12px;
+}
+
+/* Estilo de texto dentro do .transactions-container */
+.transactions-container h2,
+.transactions-container h3,
+.transactions-container p,
+.transactions-container label,
+.transactions-container select,
+.transactions-container button {
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.transactions-container h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.transactions-container h3 {
+  font-weight: 500;
+  font-size: 1.2em;
+}
+
+/* Estilo dos filtros simples (.filter) */
+.filter {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter label {
+  font-weight: 500;
+  margin-right: 10px;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Estilo do select nos filtros */
+.filter select {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+  font-weight: 400;
+  transition: all 0.3s ease;
+  color: #333;
+}
+
+.filter select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
+}
+
+/* Estilo das seções de transações por mês (.month-section) */
+/* Define o layout e aparência das seções de transações agrupadas por mês */
+.month-section h3 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0;
+  font-weight: 500;
+  font-size: 1.2em;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo dos botões nas seções de transações por mês */
+.month-section button {
+  padding: 6px 12px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.month-section button:hover {
+  background-color: #3a78c2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilo da lista de transações */
+.month-section ul {
+  padding: 0;
+  list-style: none;
+}
+
+/* Estilo de cada item da lista de transações */
+.month-section li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
+  margin-bottom: 8px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.month-section li:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateX(5px);
+}
+
+/* Estilo das transações de receita e despesa */
+.month-section li.income {
+  color: #36A2EB;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.month-section li.expense {
+  color: #FF0000;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Ícones para transações de receita e despesa */
+.month-section li.income::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-image: url('https://img.icons8.com/ios-filled/16/36A2EB/money-bag.png');
+  background-size: cover;
+  margin-right: 8px;
+}
+
+.month-section li.expense::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-image: url('https://img.icons8.com/ios-filled/16/FF0000/bill.png');
+  background-size: cover;
+  margin-right: 8px;
+}
+
+/* Estilo do container de botões em cada transação */
+.month-section li div {
+  display: flex;
+  gap: 10px;
+}
+
+/* Estilo dos botões "Editar" e "Excluir" nas transações */
+.month-section li button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.month-section li button:nth-child(1) {
+  background-color: #4a90e2; /* Botão "Editar" */
+  color: white;
+}
+
+.month-section li button:nth-child(1):hover {
+  background-color: #3a78c2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.month-section li button:nth-child(2) {
+  background-color: #dc3545; /* Botão "Excluir" */
+  color: white;
+}
+
+.month-section li button:nth-child(2):hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Media Queries para telas menores */
+/* Ajusta o layout para telas de diferentes tamanhos */
+@media (max-width: 1200px) {
+  .charts-container {
+    justify-content: center;
+  }
+
+  .chart {
+    flex: 1 1 calc(50% - 10px);
+    max-width: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .charts-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .chart {
+    flex: 1 1 100%;
+    max-width: none;
+    height: 400px;
+  }
+
+  .month-section li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .month-section li div {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .month-section li button {
+    width: 48%;
+    text-align: center;
+  }
+}
+
+/* Estilo do container do DatePicker (.date-input-container) */
+/* Posiciona o ícone de calendário dentro do input de data */
+.date-input-container {
+  position: relative;
+  display: inline-block;
+}
+
+.date-input-container .calendar-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* Estilo do input de data no DatePicker */
+.date-input-container input {
+  padding-left: 35px;
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 8px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+  font-size: 0.9em;
+  font-weight: 400;
+  transition: all 0.3s ease;
+  color: #333;
+}
+
+.date-input-container input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+  background-color: #fff;
+}
+
+/* Estilo do modal de edição (.modal-overlay e .modal) */
+/* Define a aparência do modal para edição de transações */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+  overflow: auto;
+}
+
+.modal-overlay.closing {
+  animation: fadeOut 0.3s ease-in-out forwards;
+}
+
+.modal {
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  padding: 30px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  border: 1px solid #444;
+  position: relative;
+  animation: slideIn 0.3s ease-in-out;
+}
+
+.modal.closing {
+  animation: slideOut 0.3s ease-in-out forwards;
+}
+
+/* Animações de entrada e saída para o modal */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-20px); opacity: 0; }
+}
+
+/* Estilo do conteúdo do modal */
+.modal h2 {
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  font-size: 1.8em;
+  font-weight: 600;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Estilo dos inputs e selects no modal */
+.modal form select,
+.modal form input {
+  padding: 12px 15px;
+  border: none;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+  font-size: 1em;
+  font-weight: 400;
+  transition: all 0.3s ease;
+  color: #333;
+}
+
+.modal form input:focus,
+.modal form select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+  background-color: #fff;
+}
+
+/* Estilo do DatePicker dentro do modal */
+.modal form .date-input-container {
+  position: relative;
+}
+
+.modal form .date-input-container .calendar-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.modal form .date-input-container input {
+  padding-left: 35px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Estilo dos botões no modal */
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-buttons button {
+  flex: 1;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+.modal-buttons button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 0.3);
+}
+
+.modal-buttons button[type="submit"] {
+  background-color: #28a745; /* Verde para "Salvar" */
+}
+
+.modal-buttons button[type="submit"]:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.modal-buttons button[type="button"] {
+  background-color: #6c757d; /* Cinza para "Cancelar" */
+}
+
+.modal-buttons button[type="button"]:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilo do calendário Flatpickr */
+/* Personaliza a aparência do calendário de seleção de datas */
+.flatpickr-calendar {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+}
+
+.flatpickr-day {
+  color: #fff;
+  border-radius: 4px;
+}
+
+.flatpickr-day:hover {
+  background-color: #444;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+  background-color: #28a745;
+  border-color: #28a745;
+  color: #fff;
+}
+
+.flatpickr-day.today {
+  border: 1px solid #fff;
+  color: #fff;
+}
+
+.flatpickr-month,
+.flatpickr-current-month,
+.flatpickr-prev-month,
+.flatpickr-next-month {
+  color: #fff;
+}
+
+.flatpickr-prev-month svg,
+.flatpickr-next-month svg {
+  fill: #fff !important;
+}
+
+.flatpickr-prev-month:hover svg,
+.flatpickr-next-month:hover svg {
+  fill: #ccc !important;
+}
+
+.flatpickr-year {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  padding-right: 20px;
+}
+
+.flatpickr-current-month .flatpickr-year::-webkit-inner-spin-button,
+.flatpickr-current-month .flatpickr-year::-webkit-outer-spin-button {
+  -webkit-appearance: initial;
+  appearance: initial;
+}
+
+.flatpickr-current-month .numInputWrapper span.arrowUp,
+.flatpickr-current-month .numInputWrapper span.arrowDown {
+  display: none !important;
+}
+
+.flatpickr-current-month .numInputWrapper {
+  position: relative;
+  display: inline-block;
+  overflow: visible !important;
+  background: transparent !important;
+}
+
+.flatpickr-weekdays .flatpickr-weekday {
+  color: #ccc;
+}
+
+.flatpickr-monthDropdown-months {
+  background-color: #2a2a2a !important;
+  color: #fff !important;
+  border: 1px solid #444 !important;
+  border-radius: 4px;
+  padding: 2px;
+  font-size: 14px;
+}
+
+.flatpickr-monthDropdown-months option {
+  background-color: #2a2a2a !important;
+  color: #fff !important;
+}
+
+.flatpickr-monthDropdown-months:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+/* Estilo do container de filtros (.filter-container) */
+/* Define o layout e aparência da seção de filtros */
+.filter-container {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.filter-row-with-button {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Estilo de cada grupo de filtro (.filter-group) */
+.filter-group {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Estilo dos inputs, selects e botão "Limpar Filtros" no .filter-group */
+.filter-group select,
+.filter-group input,
+.clear-filters {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  min-width: 150px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.filter-group select,
+.filter-group input {
+  background: #fff;
+  color: #000;
+}
+
+.filter-group select option {
+  color: #000;
+  background: #fff;
+}
+
+.filter-group input::placeholder {
+  color: #333;
+  opacity: 1;
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+/* Estilo do botão "Limpar Filtros" */
+.clear-filters {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+}
+
+.clear-filters:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
