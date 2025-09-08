@@ -1,0 +1,37 @@
+.fake-dashboard-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    overflow: hidden;
+    filter: blur(8px) brightness(0.6);
+    opacity: 0.4;
+}
+
+.chart-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 5vw;
+    width: 120%;
+    height: 120%;
+    position: relative;
+    animation: slowPan 60s linear infinite alternate;
+}
+
+@keyframes slowPan {
+    from {
+        transform: translate(-10%, -10%);
+    }
+    to {
+        transform: translate(0%, 0%);
+    }
+}
+
+.fake-chart-container {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 10px;
+}
