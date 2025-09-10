@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import zxcvbn from 'zxcvbn';
 import FakeDashboardBackground from '../../components/FakeDashboardBackground/FakeDashboardBackground';
 import styles from './RegisterPage.module.css';
-import api from '../api/apiService';
+import api from 'api/apiService';
 
 
 function RegisterPage() {
