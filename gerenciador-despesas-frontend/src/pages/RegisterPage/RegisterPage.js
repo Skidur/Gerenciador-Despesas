@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import zxcvbn from 'zxcvbn';
 import FakeDashboardBackground from '../../components/FakeDashboardBackground/FakeDashboardBackground';
 import styles from './RegisterPage.module.css';
+import api from '../api/apiService';
+
 
 function RegisterPage() {
     const [username, setUsername] = useState('');
@@ -39,7 +40,7 @@ function RegisterPage() {
         }
 
         try {
-            await axios.post('http://localhost:3001/api/auth/register', { username, password, fullName, birthDate });
+            await api.post('/auth/register', { username, password, fullName, birthDate });
             setSuccess('Cadastro realizado com sucesso! A redirecionar para o login...');
             setTimeout(() => {
                 navigate('/login');

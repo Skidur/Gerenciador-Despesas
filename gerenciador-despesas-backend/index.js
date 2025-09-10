@@ -7,7 +7,7 @@ const transactionRoutes = require('./routes/transactions');
 const authRoutes = require('./routes/auth');
 
 app.use(cors({
-    origin: 'http://localhost:3000'
+    origin: ['http://localhost:3000', 'https://gerenciador-despesas-livid.vercel.app']
 }));
 
 app.use(express.json());
