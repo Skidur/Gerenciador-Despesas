@@ -1,41 +1,63 @@
-const sqlite3 = require('sqlite3').verbose();
+require('dotenv').config();
 
-const db = new sqlite3.Database('./database.db', (err) => {
-    if (err) {
-        console.error('Erro ao conectar ao SQLite:', err.message);
-    } else {
-        console.log('Conectado ao SQLite!');
+const { Pool } = require('pg');
+
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
     }
 });
 
-db.run(`
-    CREATE TABLE IF NOT EXISTS transactions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        type TEXT CHECK(type IN ('income', 'expense')) NOT NULL,
-        amount REAL NOT NULL,
-        category TEXT NOT NULL,
-        date TEXT NOT NULL,
-        description TEXT,
-        status TEXT CHECK(status IN ('pago', 'pendente')) NOT NULL DEFAULT 'pago',
-        installmentGroupId TEXT,
-        recurringGroupId TEXT,
-        userId INTEGER NOT NULL,
-        FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
-    )
-`, (err) => {
-    if (err) console.error("Erro ao criar/alterar tabela 'transactions':", err.message);
+const db = {
+    query: (text, params) => pool.query(text, params),
 
-    db.run(`
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL,
-            fullName TEXT NOT NULL,
-            birthDate TEXT NOT NULL
-        )
-    `, (err) => {
-        if (err) console.error("Erro ao criar tabela 'users':", err.message);
-    });
-});
+    get: async (sql, params = []) => {
+        const result = await pool.query(sql, params);
+        return result.rows[0];
+    },
+    run: async (sql, params = []) => {
+        return await pool.query(sql, params);
+    },
+    all: async (sql, params = []) => {
+        const result = await pool.query(sql, params);
+        return result.rows;
+    }
+};
+
+const initializeDatabase = async () => {
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                username TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL,
+                fullName TEXT NOT NULL,
+                birthDate TEXT NOT NULL
+            );
+        `);
+
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS transactions (
+                id SERIAL PRIMARY KEY,
+                type TEXT CHECK(type IN ('income', 'expense')) NOT NULL,
+                amount REAL NOT NULL,
+                category TEXT NOT NULL,
+                date TEXT NOT NULL,
+                description TEXT,
+                status TEXT CHECK(status IN ('pago', 'pendente')) NOT NULL DEFAULT 'pago',
+                installmentGroupId TEXT,
+                recurringGroupId TEXT,
+                userId INTEGER NOT NULL,
+                FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+            );
+        `);
+        console.log("Banco de dados PostgreSQL inicializado com sucesso!");
+    } catch (err) {
+        console.error("Erro ao inicializar o banco de dados PostgreSQL:", err.message);
+    }
+};
+
+initializeDatabase();
 
 module.exports = db;
