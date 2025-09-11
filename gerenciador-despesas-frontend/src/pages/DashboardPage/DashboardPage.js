@@ -1,8 +1,9 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import api from '../../api/apiService'; 
 import { useAuth } from '../../contexts/AuthContext';
 import { Pie, Bar, Line, Doughnut, Radar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale, LineElement, PointElement, RadialLinearScale, Filler as FillerElement, LineController, BarController, PieController, DoughnutController, RadarController } from 'chart.js';
+import { format, getMonth, getYear, parseISO } from 'date-fns';
 
 import DatePicker from '../../components/DatePicker/DatePicker';
 import ConfirmationPopup from '../../components/ConfirmationPopup/ConfirmationPopup';
@@ -348,27 +349,51 @@ function DashboardPage() {
     return dateString.split('-').reverse().join('/');
   };
 
-  const totalIncome = transactions
-    .filter((t) => t.type === 'income')
-    .reduce((sum, t) => sum + t.amount, 0);
+  const financialSummary = useMemo(() => {
+    const now = new Date();
+    const currentMonth = getMonth(now);
+    const currentYear = getYear(now);
 
-  const totalPaidExpenses = transactions
-      .filter((t) => t.type === 'expense' && t.status === 'pago')
-      .reduce((sum, t) => sum + t.amount, 0);
+    const transactionsInCurrentMonth = transactions.filter(t => {
+      try {
+        const transactionDate = parseISO(t.date);
+        return getYear(transactionDate) === currentYear && getMonth(transactionDate) === currentMonth;
+      } catch (e) {
+        return false;
+      }
+    });
 
-  const totalPendingExpenses = transactions
-      .filter((t) => t.type === 'expense' && t.status === 'pendente')
-      .reduce((sum, t) => sum + t.amount, 0);
+    const incomeThisMonth = transactionsInCurrentMonth.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+    const paidExpensesThisMonth = transactionsInCurrentMonth.filter(t => t.type === 'expense' && t.status === 'pago').reduce((sum, t) => sum + t.amount, 0);
+    const pendingExpensesThisMonth = transactionsInCurrentMonth.filter(t => t.type === 'expense' && t.status === 'pendente').reduce((sum, t) => sum + t.amount, 0);
+    const currentMonthBalance = incomeThisMonth - paidExpensesThisMonth;
 
-  const currentBalance = totalIncome - totalPaidExpenses;
-  const projectedBalance = currentBalance - totalPendingExpenses;
+    const totalIncome = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+    const totalPaidExpenses = transactions.filter(t => t.type === 'expense' && t.status === 'pago').reduce((sum, t) => sum + t.amount, 0);
+    const totalPendingExpenses = transactions.filter(t => t.type === 'expense' && t.status === 'pendente').reduce((sum, t) => sum + t.amount, 0);
+    const totalExpenses = totalPaidExpenses + totalPendingExpenses;
+    const projectedBalance = totalIncome - totalExpenses;
 
-  const generateColor = (index) => {
+    return {
+      currentMonthName: format(now, 'MMMM'),
+      incomeThisMonth,
+      paidExpensesThisMonth,
+      pendingExpensesThisMonth,
+      currentMonthBalance,
+      totalIncome,
+      totalExpenses,
+      totalPaidExpenses,
+      totalPendingExpenses,
+      projectedBalance
+    };
+  }, [transactions]);
+
+  const generateColor = useCallback((index) => {
     let hue = (index * 137.508) % 360;
     return `hsl(${hue <= 15 || hue >= 345 ? 30 + ((hue + 15) % 300) : hue}, 70%, 50%)`;
-  };
+}, []);
 
-  const darkenColor = (color) => {
+const darkenColor = useCallback((color) => {
     if (color.startsWith('hsl')) {
       const hslMatch = color.match(/hsl\((\d+\.?\d*),\s*(\d+\.?\d*)%,\s*(\d+\.?\d*)%\)/);
       if (hslMatch) {
@@ -396,7 +421,7 @@ function DashboardPage() {
       return `#${Math.floor(r * 0.7).toString(16).padStart(2, '0')}${Math.floor(g * 0.7).toString(16).padStart(2, '0')}${Math.floor(b * 0.7).toString(16).padStart(2, '0')}`;
     }
     return color;
-  };
+  }, []);
 
   const allCategories = [...new Set(transactions.map((t) => t.category))];
 
@@ -443,32 +468,43 @@ function DashboardPage() {
     }]
   };
 
-  const expenseCategories = [...new Set(transactions.filter(t => t.type === 'expense').map(t => t.category))];
-  const expenseDataForChart = expenseCategories.map(cat => 
-    transactions
-      .filter(t => t.type === 'expense' && t.category === cat)
-      .reduce((sum, t) => sum + t.amount, 0)
-  );
+  const expenseChartData = useMemo(() => {
+    const expenseCategories = [...new Set(transactions.filter(t => t.type === 'expense').map(t => t.category))];
+    
+    const expenseDataForChart = expenseCategories.map(cat => 
+      transactions
+        .filter(t => t.type === 'expense' && t.category === cat)
+        .reduce((sum, t) => sum + t.amount, 0)
+    );
 
-  const expenseColors = expenseCategories.map(() => '#F44336'); 
+    const expenseColors = expenseCategories.map((_, index) => generateColor(index));
+    
+    const labels = [...expenseCategories, 'Saldo'];
+    const data = [...expenseDataForChart, (financialSummary.projectedBalance > 0 ? financialSummary.projectedBalance : 0)];
+    const backgroundColor = [...expenseColors, '#4CAF50'];
 
-  const expenseChartData = {
-    labels: [...expenseCategories, 'Saldo'],
-    datasets: [{
-      label: 'Despesas vs. Saldo',
-      data: [...expenseDataForChart, (currentBalance > 0 ? currentBalance : 0)],
-      backgroundColor: [...expenseColors, '#4CAF50'], 
-      borderColor: [...expenseColors.map(darkenColor), darkenColor('#4CAF50')],
-      borderWidth: 2,
-    }],
-  };
+    return {
+      labels,
+      datasets: [{
+        label: 'Despesas vs. Saldo',
+        data,
+        backgroundColor,
+        borderColor: backgroundColor.map(color => darkenColor(color)),
+        borderWidth: 2,
+      }],
+    };
+  }, [transactions, financialSummary.projectedBalance, generateColor, darkenColor]);
 
   const progressBackgroundColors = chartTypes.progress === 'area' || chartTypes.progress === 'radar' ? 'rgba(54, 162, 235, 0.3)' : ['#36A2EB', '#4CAF50', '#FF6384'];
   const progressData = {
     labels: ['Receitas', 'Despesas Pagas', 'Despesas Pendentes'],
     datasets: [{
         label: 'Progresso Financeiro',
-        data: [totalIncome, totalPaidExpenses, totalPendingExpenses],
+        data: [
+            financialSummary.totalIncome, 
+            financialSummary.totalPaidExpenses,
+            financialSummary.totalPendingExpenses
+        ],
       backgroundColor: progressBackgroundColors,
       borderColor: chartTypes.progress === 'pie' || chartTypes.progress === 'doughnut' || chartTypes.progress === 'bar' ? (Array.isArray(progressBackgroundColors) ? progressBackgroundColors.map(darkenColor) : darkenColor(progressBackgroundColors)) : '#36A2EB',
       borderWidth: chartTypes.progress === 'pie' || chartTypes.progress === 'doughnut' || chartTypes.progress === 'bar' ? 2 : 1,
@@ -549,8 +585,8 @@ function DashboardPage() {
       tooltip: {
         callbacks: {
           label: (context) => {
-            const totalAllExpenses = totalPaidExpenses + totalPendingExpenses;
-            const total = context.dataset.label === 'Receitas' ? totalIncome : totalAllExpenses;
+            const totalAllExpenses = financialSummary.totalExpenses;
+            const total = context.dataset.label === 'Receitas' ? financialSummary.totalIncome : totalAllExpenses;
             return `${context.label}: R$${context.raw.toFixed(2)} (${total > 0 ? ((context.raw / total) * 100).toFixed(2) : 0}%)`;
           },
         },
@@ -643,16 +679,19 @@ function DashboardPage() {
       <div className="main-container">
         <aside className="sidebar glass-section">
           <div className="summary">
-            <h2>Resumo Financeiro</h2>
-            <p className="income">Receitas: R${totalIncome.toFixed(2)}</p>
-            <p className="expense">Despesas Pagas: R${totalPaidExpenses.toFixed(2)}</p>
-            <p className="pending">Contas Pendentes: R${totalPendingExpenses.toFixed(2)}</p>
-            <p className={currentBalance >= 0 ? 'positive' : 'negative'}>
-              <strong>Saldo Atual: R${currentBalance.toFixed(2)}</strong>
+            <h2>Resumo ({financialSummary.currentMonthName})</h2>
+            <p className="income">Receitas do Mês: R${financialSummary.incomeThisMonth.toFixed(2)}</p>
+            <p className="expense">Despesas Pagas: R${financialSummary.paidExpensesThisMonth.toFixed(2)}</p>
+            <p className="pending">Contas Pendentes: R${financialSummary.pendingExpensesThisMonth.toFixed(2)}</p>
+            <p className={financialSummary.currentMonthBalance >= 0 ? 'positive' : 'negative'}>
+              <strong>Saldo Atual do Mês: R${financialSummary.currentMonthBalance.toFixed(2)}</strong>
             </p>
             <hr style={{ borderColor: 'rgba(255, 255, 255, 0.2)', margin: '15px 0' }} />
-            <p className={projectedBalance >= 0 ? 'positive' : 'negative'}>
-              Saldo Projetado: R${projectedBalance.toFixed(2)}
+            <h2>Resumo Geral</h2>
+            <p className="income">Receitas Totais: R${financialSummary.totalIncome.toFixed(2)}</p>
+            <p className="expense">Despesas Totais: R${financialSummary.totalExpenses.toFixed(2)}</p>
+            <p className={financialSummary.projectedBalance >= 0 ? 'positive' : 'negative'}>
+              <strong>Saldo Projetado Final: R${financialSummary.projectedBalance.toFixed(2)}</strong>
             </p>
           </div>
         </aside>

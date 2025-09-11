@@ -43,6 +43,7 @@ exports.updateTransaction = async (req, res) => {
         }
         res.json({ message: 'Transação editada com sucesso!' });
     } catch (err) {
+        console.error("Erro no DB ao editar transação:", err.message);
         return res.status(500).json({ error: 'Erro ao editar transação' });
     }
 };
