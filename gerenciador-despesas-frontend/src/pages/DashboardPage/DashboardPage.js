@@ -39,6 +39,7 @@ function DashboardPage() {
 
   const [showBirthdayModal, setShowBirthdayModal] = useState(false);
 
+  const [editStatus, setEditStatus] = useState('pago');
   const [isEditing, setIsEditing] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [editTransaction, setEditTransaction] = useState(null);
@@ -279,6 +280,7 @@ function DashboardPage() {
     setEditCategory(transaction.category);
     setEditDate(transaction.date);
     setEditDescription(transaction.description || '');
+    setEditStatus(transaction.status);
   };
 
   const handleMarkAsPaid = (transactionId) => {
@@ -304,6 +306,7 @@ function DashboardPage() {
       category: editCategory,
       date: editDate || new Date().toISOString().split('T')[0],
       description: editDescription,
+      status: editStatus,
     };
     api.put(`/transactions/${editTransaction.id}`, updatedTransaction)
       .then(() => {
@@ -874,6 +877,12 @@ const darkenColor = useCallback((color) => {
                 <option value="expense">Despesa</option>
                 <option value="income">Receita</option>
               </select>
+              {editType === 'expense' && (
+                <select value={editStatus} onChange={(e) => setEditStatus(e.target.value)}>
+                  <option value="pago">Pago</option>
+                  <option value="pendente">Pendente</option>
+                </select>
+              )}
               <input
                 type="number"
                 placeholder="Valor"
